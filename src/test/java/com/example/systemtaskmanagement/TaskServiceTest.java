@@ -27,7 +27,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
 @ExtendWith(MockitoExtension.class)
 public class TaskServiceTest {
 
@@ -50,8 +49,6 @@ public class TaskServiceTest {
     private Task task;
     private TaskDTO taskDTO;
     private User assignee;
-    private Set<TaskDTO> taskSetDTO;
-    private Set<Task> taskSet;
 
     @BeforeEach
     public void setup() {
@@ -68,12 +65,6 @@ public class TaskServiceTest {
 
         taskDTO = new TaskDTO();
         taskDTO.setId(1L);
-
-        taskSetDTO = new HashSet<>();
-        taskSetDTO.add(taskDTO);
-
-        taskSet = new HashSet<>();
-        taskSet.add(task);
     }
 
     @Test
@@ -115,7 +106,6 @@ public class TaskServiceTest {
         assertThrows(AccessDeniedException.class, () -> taskService.update(1L, taskDTO));
     }
 
-
     @Test
     public void deleteById_ShouldDeleteTask_WhenUserIsAuthor() {
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
@@ -141,7 +131,7 @@ public class TaskServiceTest {
     @Test
     public void getUserAssignedTasks_ShouldReturnAssignedTasks_WhenUserExists() {
         when(userRepository.findById(2L)).thenReturn(Optional.of(assignee));
-        when(taskMapper.convertFromEntityList(assignee.getAssignedTasks())).thenReturn(taskSetDTO);
+        when(taskMapper.convertFromEntityList(assignee.getAssignedTasks())).thenReturn(Collections.singleton(taskDTO));
 
         Set<TaskDTO> result = taskService.getUserAssignedTasks(2L);
 
@@ -152,47 +142,57 @@ public class TaskServiceTest {
 
     @Test
     void getUserOwnTasks_ShouldReturnAuthoredTasks_WhenUserExists() {
-
         Long userId = 1L;
         User user = new User();
-        user.setAssignedTasks(Collections.emptySet());
+        Task task = new Task();
+        Set<Task> tasks = new HashSet<>();
+        tasks.add(task);
+        user.setAssignedTasks(tasks);
+
+        TaskDTO taskDTO = new TaskDTO();
+        Set<TaskDTO> taskDTOs = new HashSet<>();
+        taskDTOs.add(taskDTO);
 
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        Mockito.when(taskMapper.convertFromEntityList(Collections.emptySet())).thenReturn(new HashSet<>());
-
+        Mockito.when(taskMapper.convertFromEntityList(tasks)).thenReturn(taskDTOs);
 
         Set<TaskDTO> result = taskService.getUserOwnTasks(userId);
 
-
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.isEmpty());
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertTrue(result.contains(taskDTO));
     }
 
     @Test
     public void saveAssignedUser_ShouldAddUserToTaskAssignees_WhenUserIsAuthor() {
+
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
         when(userService.getCurrentUser()).thenReturn(currentUser);
         when(userRepository.findById(2L)).thenReturn(Optional.of(assignee));
         when(taskMapper.toDto(task)).thenReturn(taskDTO);
 
+
         TaskDTO result = taskService.saveAssignedUser(2L, 1L);
 
-        assertNotNull(result);
-        assertTrue(task.getAssignees().contains(assignee));
+
+        assertNotNull(result, "Expected TaskDTO result to be not null");
+        assertTrue(task.getAssignees().contains(assignee), "Expected assignee to be added to task");
         verify(taskRepository, times(1)).save(task);
     }
 
     @Test
     void saveAssignedUser_ShouldThrowAccessDeniedException_WhenUserIsNotAuthor() {
-
         Long userId = 2L;
         Long taskId = 1L;
 
         User currentUser = new User();
         currentUser.setId(1L);
 
+        User author = new User();
+        author.setId(3L);
+
         Task task = new Task();
-        task.setAuthor(new User());
+        task.setAuthor(author);
         task.setId(taskId);
 
         Mockito.when(userService.getCurrentUser()).thenReturn(currentUser);
@@ -203,6 +203,7 @@ public class TaskServiceTest {
             taskService.saveAssignedUser(userId, taskId);
         });
     }
+
     @Test
     public void editStatusTaskOfAssignedUser_ShouldUpdateStatus_WhenUserIsAssigned() {
         task.getAssignees().add(currentUser);
