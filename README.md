@@ -41,7 +41,7 @@ git clone https://github.com/your-username/task-management-system.git
 cd task-management-system
 ```
 
-### Run docker container
+### Run docker 
 
 ```bash
 docker-compose up --build
