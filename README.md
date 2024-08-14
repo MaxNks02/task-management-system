@@ -39,3 +39,16 @@ To get started, clone the repository to your local machine:
 ```bash
 git clone https://github.com/your-username/task-management-system.git
 cd task-management-system
+```
+
+### Run docker container
+
+```bash
+docker-compose up --build
+```
+
+### Open Swagger API
+http://localhost:8080/swagger-ui.html
+
+### If you wish test the application
+https://zakatbot.ru/swagger-ui.html
