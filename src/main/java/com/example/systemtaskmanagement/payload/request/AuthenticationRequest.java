@@ -1,5 +1,6 @@
 package com.example.systemtaskmanagement.payload.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
