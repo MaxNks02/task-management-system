@@ -51,4 +51,4 @@ docker-compose up --build
 http://localhost:8080/swagger-ui.html
 
 ### If you wish test the application
-https://zakatbot.ru/swagger-ui.html
+https://zakyatbot.ru/swagger-ui.html
