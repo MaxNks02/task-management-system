@@ -18,10 +18,10 @@ Welcome to the **Task Management System** project! This is a simple yet robust t
 
 ### Technologies Used
 
-- **Java 17+**
+- **Java 17**
 - **Spring Boot**
 - **Spring Security**
-- **PostgreSQL/MySQL**
+- **PostgreSQL**
 - **Docker & Docker Compose**
 - **Swagger UI**
 
