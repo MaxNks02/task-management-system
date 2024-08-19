@@ -11,9 +11,7 @@ services:
       - "5432:5432"
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: maxmcson/task-management-system
     depends_on:
       - db
     ports:
