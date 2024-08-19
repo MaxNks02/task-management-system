@@ -31,6 +31,8 @@ Welcome to the **Task Management System** project! This is a simple yet robust t
 
 - **Docker**: Ensure Docker is installed on your machine.
 - **Git**: Make sure you have Git installed to clone the repository.
+- **Maven**: Make sure you have maven installed on your machine.
+
 
 ### Clone the Repository
 
@@ -39,6 +41,11 @@ To get started, clone the repository to your local machine:
 ```bash
 git clone https://github.com/your-username/task-management-system.git
 cd task-management-system
+```
+### Run maven
+
+```bash
+mvn clean install
 ```
 
 ### Run docker 
