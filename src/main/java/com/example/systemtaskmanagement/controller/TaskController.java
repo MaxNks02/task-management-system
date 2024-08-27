@@ -58,7 +58,7 @@ public class TaskController extends BaseController<TaskService> {
         return  ResponseHandler.generateResponse("save task", HttpStatus.OK, service.create(taskDTO));
     }
 
-    @PostMapping(value = "/edit/{id}")
+    @PutMapping(value = "/edit/{id}")
     public ResponseEntity<?> edit(@PathVariable Long id, @RequestBody SaveTaskRequest saveTaskRequest) {
         TaskDTO taskDTO = new TaskDTO();
         taskDTO.setTitle(saveTaskRequest.getTitle());
@@ -68,7 +68,7 @@ public class TaskController extends BaseController<TaskService> {
         return  ResponseHandler.generateResponse("save task", HttpStatus.OK, service.update(id, taskDTO));
     }
 
-    @PostMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
        service.deleteById(id);
        return  ResponseHandler.generateResponse("delete task", HttpStatus.OK);
@@ -100,7 +100,7 @@ public class TaskController extends BaseController<TaskService> {
         return ResponseHandler.generateResponse("get session user tasks", HttpStatus.OK, service.getSessionUserOwnTask());
     }
 
-    @PostMapping(value = "/save-assigned-user")
+    @PatchMapping(value = "/save-assigned-user")
     public ResponseEntity<?> saveAssignedUser(
             @RequestParam(name = "user_id", required = false, defaultValue = "0") Long userId,
             @RequestParam(name = "task_id", required = false, defaultValue = "0") Long taskId){
@@ -108,7 +108,7 @@ public class TaskController extends BaseController<TaskService> {
       return   ResponseHandler.generateResponse("save assigned user", HttpStatus.OK, service.saveAssignedUser(userId, taskId));
     }
 
-    @PostMapping(value = "/edit-task-status-assigned-user")
+    @PatchMapping(value = "/edit-task-status-assigned-user")
     public ResponseEntity<?> editTaskStatusAssignedUser(@RequestParam Long taskId, @RequestParam TaskStatus taskStatus){
         return ResponseHandler.generateResponse("edit task status assigned user", HttpStatus.OK, service.editStatusTaskOfAssignedUser(taskId, taskStatus));
     }
